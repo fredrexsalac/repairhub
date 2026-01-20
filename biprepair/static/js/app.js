@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const installBanner = document.querySelector('[data-install-banner]');
     const installTrigger = installBanner?.querySelector('[data-install-trigger]');
     const installDismiss = installBanner?.querySelector('[data-install-dismiss]');
+    const installCopyEl = installBanner?.querySelector('[data-install-copy]');
     let deferredPrompt = null;
 
     const policyModalLayer = document.querySelector('[data-policy-modal-layer]');
@@ -98,6 +99,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!installBanner) return;
         const isMobile = /iphone|ipad|android|mobile/i.test(navigator.userAgent);
         if (!isMobile) return;
+
+        const appLabel = installBanner.dataset.installAppLabel || 'BiPSU Repair';
+        if (installCopyEl) {
+            installCopyEl.textContent = `Add ${appLabel} to your device for one-tap access.`;
+        }
 
         const hideBanner = () => {
             installBanner.classList.remove('install-banner--visible');
