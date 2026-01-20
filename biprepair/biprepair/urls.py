@@ -15,6 +15,9 @@ Including another URLconf
 from django.views.generic import TemplateView
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
+from django.conf.urls.static import static
+from django.contrib import admin
 from django.urls import include, path
 
 from appointments import views as appointment_views
@@ -24,3 +27,6 @@ urlpatterns = [
     path('service-worker.js', appointment_views.service_worker, name='service_worker'),
     path('', include('appointments.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
