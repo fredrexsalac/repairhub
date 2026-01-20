@@ -3,6 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const isClientAuthenticated = bodyEl?.dataset.clientAuthenticated === 'true';
     const gateRoot = document.querySelector('[data-client-gate-root]');
     const isAdminPath = window.location.pathname.startsWith('/admin');
+    const installBanner = document.querySelector('[data-install-banner]');
+    const installTrigger = installBanner?.querySelector('[data-install-trigger]');
+    const installDismiss = installBanner?.querySelector('[data-install-dismiss]');
+    let deferredPrompt = null;
+
     const policyModalLayer = document.querySelector('[data-policy-modal-layer]');
     const policyModalContent = policyModalLayer?.querySelector('[data-policy-modal-content]');
     const policyTemplateRoot = document.getElementById('policy-modal-library');
@@ -88,6 +93,45 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     initializeDisclaimers();
+
+    const initializeInstallBanner = () => {
+        if (!installBanner) return;
+        const isMobile = /iphone|ipad|android|mobile/i.test(navigator.userAgent);
+        if (!isMobile) return;
+
+        const hideBanner = () => {
+            installBanner.classList.remove('install-banner--visible');
+            installBanner.hidden = true;
+        };
+
+        installDismiss?.addEventListener('click', () => {
+            hideBanner();
+            localStorage.setItem('biprepair_install_dismissed', 'true');
+        });
+
+        window.addEventListener('beforeinstallprompt', (event) => {
+            event.preventDefault();
+            if (localStorage.getItem('biprepair_install_dismissed') === 'true') return;
+            deferredPrompt = event;
+            installBanner.hidden = false;
+            requestAnimationFrame(() => {
+                installBanner.classList.add('install-banner--visible');
+            });
+        });
+
+        installTrigger?.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const result = await deferredPrompt.userChoice;
+            if (result.outcome === 'accepted') {
+                localStorage.setItem('biprepair_install_dismissed', 'true');
+                hideBanner();
+            }
+            deferredPrompt = null;
+        });
+    };
+
+    initializeInstallBanner();
 
     const initializeLiveClock = () => {
         const targets = document.querySelectorAll('[data-live-clock]');

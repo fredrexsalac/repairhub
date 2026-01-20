@@ -11,6 +11,52 @@
     --font: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
 }
 
+.install-banner {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 50;
+    background: rgba(5, 6, 10, 0.95);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(14px);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform: translateY(-100%);
+    opacity: 0;
+}
+
+.install-banner.install-banner--visible {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.install-banner__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.85rem 0.5rem;
+}
+
+.install-banner__copy p {
+    margin: 0;
+}
+
+.install-banner__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.install-banner__dismiss {
+    color: var(--muted);
+}
+
+@media (min-width: 769px) {
+    .install-banner {
+        display: none;
+    }
+}
+
 .footer-meta {
     margin-top: 0.75rem;
     display: flex;
