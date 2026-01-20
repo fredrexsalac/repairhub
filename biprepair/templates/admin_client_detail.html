@@ -1,0 +1,124 @@
+{% extends "admin_base.html" %}
+{% block title %}{{ client.full_name }} · Client Profile{% endblock %}
+{% block admin_content %}
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">Client profile</p>
+        <h1>{{ client.full_name }}</h1>
+        <p>{{ client.email }} • {{ client.contact_number }}</p>
+    </div>
+    <div class="cta-row">
+        <a class="btn ghost" href="{% url 'admin_clients' %}">← Back to clients</a>
+        <a class="btn ghost" href="{% url 'admin_logout' %}">Log out</a>
+    </div>
+</section>
+
+<section class="card">
+    <div class="detail-grid">
+        <div>
+            <dt>Status</dt>
+            <dd>
+                {% if client.is_active %}
+                    <span class="status-chip status-approved">Active</span>
+                {% else %}
+                    <span class="status-chip status-declined">Inactive</span>
+                {% endif %}
+            </dd>
+        </div>
+        <div>
+            <dt>Total appointments</dt>
+            <dd>{{ appointments|length }}</dd>
+        </div>
+        <div>
+            <dt>Registered</dt>
+            <dd>{{ client.created_at|date:"M d, Y" }}</dd>
+        </div>
+        <div>
+            <dt>School program</dt>
+            <dd>{{ client.get_school_program_display|default:'Not set' }}</dd>
+        </div>
+        <div>
+            <dt>Student classification</dt>
+            <dd>{{ client.get_student_type_display|default:'Not set' }}</dd>
+        </div>
+    </div>
+    <form method="post" class="cta-row">
+        {% csrf_token %}
+        {% if client.is_active %}
+            <button class="btn ghost" type="submit" name="toggle_status" value="deactivate">Deactivate account</button>
+        {% else %}
+            <button class="btn primary" type="submit" name="toggle_status" value="activate">Activate account</button>
+        {% endif %}
+    </form>
+</section>
+
+<section class="card">
+    <h3>Academic information</h3>
+    <form method="post" class="form-grid">
+        {% csrf_token %}
+        <input type="hidden" name="update_academic" value="1" />
+        <label>
+            <span>School program</span>
+            {{ academic_form.school_program }}
+        </label>
+        <label>
+            <span>Student classification</span>
+            {{ academic_form.student_type }}
+        </label>
+        <button class="btn primary full-width" type="submit">Save academic info</button>
+    </form>
+</section>
+
+<section class="card">
+    <h3>Reset client password</h3>
+    <form method="post" class="form-grid">
+        {% csrf_token %}
+        <input type="hidden" name="reset_password" value="1" />
+        <label>
+            <span>New password</span>
+            <input class="input-control" type="password" name="new_password" required minlength="8" />
+        </label>
+        <label>
+            <span>Confirm password</span>
+            <input class="input-control" type="password" name="confirm_password" required minlength="8" />
+        </label>
+        <button class="btn primary" type="submit">Set new password</button>
+    </form>
+</section>
+
+<section class="card">
+    <h3>Appointment history</h3>
+    <div class="table-wrapper">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Device</th>
+                    <th>Service</th>
+                    <th>Status</th>
+                    <th>Preferred schedule</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appointment in appointments %}
+                    <tr>
+                        <td>{{ appointment.appointment_id }}</td>
+                        <td>{{ appointment.get_device_type_display }}</td>
+                        <td>{{ appointment.service_label }}</td>
+                        <td><span class="status-chip status-{{ appointment.status }}">{{ appointment.get_status_display }}</span></td>
+                        <td>{{ appointment.preferred_datetime|date:"M d, Y h:i A" }}</td>
+                        <td class="admin-actions">
+                            <a href="{% url 'admin_detail' appointment.appointment_id %}">Manage</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6">No appointments for this client.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

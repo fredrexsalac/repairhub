@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Terms of Service · BiPSU Repair{% endblock %}
+{% block content %}
+{% now "M d, Y" as rendered_today %}
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">Policies</p>
+        <h1>Terms of Service</h1>
+        <p>Read this document before booking any repair. It protects both you and the BiPSU Student-Technician Repair Hub.</p>
+    </div>
+</section>
+
+<section class="card policy-card">
+    {% include 'policies/_tos_body.html' %}
+    <p class="micro">Updated {{ rendered_today }} • Guided by R.A. 7394 (Consumer Act) and R.A. 8792 (E-Commerce Act).</p>
+</section>
+{% endblock %}

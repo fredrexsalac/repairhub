@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Appointment Tracking Policy · BiPSU Repair{% endblock %}
+{% block content %}
+{% include 'partials/_guest_disclaimer.html' %}
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">Policies</p>
+        <h1>Appointment Tracking Policy</h1>
+        <p>Understand how tracking IDs are issued, recovered, and protected.</p>
+    </div>
+</section>
+
+<section class="card policy-card">
+    {% include 'policies/_tracking_body.html' %}
+    <p class="micro">Updated {% now "M d, Y" %} • Tracking IDs are never shared publicly.</p>
+</section>
+{% endblock %}

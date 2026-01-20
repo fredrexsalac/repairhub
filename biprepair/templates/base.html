@@ -1,0 +1,133 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}BipSU Device Repair{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{% static 'image/Birepair.png' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    {% if request.path|slice:':6' == '/admin' or current_route|default:''|slice:':5' == 'admin' %}
+        <link rel="manifest" href="{% static 'pwa/admin-manifest.json' %}">
+        <meta name="theme-color" content="#10131f">
+    {% else %}
+        <link rel="manifest" href="{% static 'pwa/client-manifest.json' %}">
+        <meta name="theme-color" content="#1a1f2c">
+    {% endif %}
+</head>
+{% with request.resolver_match.url_name as current_route %}
+<body class="page-shell"
+      data-client-authenticated="{% if is_client_authenticated %}true{% else %}false{% endif %}"
+      data-client-gate-disabled="{% if current_route == 'client_login' or current_route == 'client_register' or current_route == 'admin_login' or current_route == 'admin_register' or current_route == 'admin_dashboard' or current_route == 'admin_detail' or current_route == 'admin_root' %}true{% else %}false{% endif %}">
+    <div class="backdrop"></div>
+    <header class="site-header">
+        <div class="shell">
+            <a class="logo" href="{% url 'home' %}">
+                <div class="logo__marks">
+                    <img src="{% static 'image/Birepair.png' %}" alt="BipSU Repair Crew logo" />
+                    <img src="{% static 'image/bipsu.png' %}" alt="BipSU University seal" />
+                </div>
+                <div>
+                    <span class="brand-eyebrow">BiPSU Student-Technician Repair Hub</span>
+                    <strong>
+                        {% if admin_user %}
+                            Welcome, {{ admin_user.full_name }}
+                        {% elif client_user %}
+                            Welcome, {{ client_user.full_name }}
+                        {% else %}
+                            Official portal
+                        {% endif %}
+                    </strong>
+                </div>
+            </a>
+            <nav class="main-nav">
+                {% if is_client_authenticated %}
+                    {% if not admin_user %}
+                        <a href="{% url 'home' %}">Home</a>
+                        <a href="{% url 'book_appointment' %}">Book</a>
+                        <a href="{% url 'contact_admin' %}">Contact Admin</a>
+                    {% endif %}
+                    <a class="badge-link" href="{% url 'client_logout' %}">Logout</a>
+                {% else %}
+                    <a href="{% url 'home' %}">Home</a>
+                    {% if current_route == 'client_login' or current_route == 'client_register' %}
+                        <a class="badge-link" href="{% url 'client_login' %}">Client login</a>
+                    {% elif current_route == 'admin_login' or current_route == 'admin_register' %}
+                        <a class="badge-link" href="{% url 'admin_login' %}">Admin login</a>
+                    {% else %}
+                        <button class="ghost-link" type="button" data-client-gate-trigger>Client login</button>
+                    {% endif %}
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="shell main-shell">
+        {% if messages %}
+            <div class="flash-stack">
+                {% for message in messages %}
+                    <div class="flash flash-{{ message.tags|default:'info' }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="shell">
+            <p>Student-run service. Work performed near BipSU study hubs, by appointment only.</p>
+            <div class="footer-meta">
+                <small>
+                    © {% now "Y" %} BipSU Repair Crew • Stay safe, protect your data.
+                    <span class="footer-links">
+                        <a href="{% url 'terms_of_service' %}">Terms</a> •
+                        <a href="{% url 'privacy_policy' %}">Privacy</a> •
+                        <a href="{% url 'tracking_policy' %}">Tracking</a>
+                    </span>
+                </small>
+                <span class="footer-clock" data-live-clock>--:-- -- · Loading PH time…</span>
+            </div>
+        </div>
+    </footer>
+
+    {% if not is_client_authenticated and current_route != 'client_login' and current_route != 'client_register' and current_route != 'admin_login' and current_route != 'admin_register' and current_route != 'admin_dashboard' and current_route != 'admin_detail' and current_route != 'admin_root' %}
+        <div class="client-gate" hidden data-client-gate-root>
+            <div class="client-gate__scrim" data-client-gate-dismiss></div>
+            <div class="client-gate__modal">
+                <button class="client-gate__close" type="button" data-client-gate-dismiss aria-label="Close modal">×</button>
+                <p class="eyebrow">Client access required</p>
+                <h2>Sign in before booking</h2>
+                <p class="modal-lead">
+                    Create a client profile so we can link your device history and send SMS updates.
+                </p>
+                <div class="client-gate__actions">
+                    <a class="btn primary" href="{% url 'client_login' %}">I already have an account</a>
+                    <a class="btn ghost" href="{% url 'client_register' %}">Register a new client account</a>
+                </div>
+                <small class="micro">
+                    Need help? Message an admin via <a href="{% url 'contact_admin' %}">Contact Admin</a> once you're signed in.
+                </small>
+            </div>
+        </div>
+    {% endif %}
+
+    <div id="policy-modal-library">
+        <template data-policy="tos">{% include 'policies/_tos_body.html' %}</template>
+        <template data-policy="privacy">{% include 'policies/_privacy_body.html' %}</template>
+        <template data-policy="tracking">{% include 'policies/_tracking_body.html' %}</template>
+    </div>
+    <div class="policy-modal-layer" hidden data-policy-modal-layer>
+        <div class="policy-modal-window">
+            <button class="policy-modal-close" type="button" data-policy-modal-close aria-label="Close policy modal">×</button>
+            <article data-policy-modal-content class="policy-article"></article>
+        </div>
+    </div>
+
+    <script src="{% static 'js/app.js' %}" defer></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+{% endwith %}

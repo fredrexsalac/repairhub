@@ -1,0 +1,21 @@
+{
+  "name": "BiPSU Repair - Admin",
+  "short_name": "BiPSU Admin",
+  "start_url": "/admin",
+  "scope": "/admin",
+  "display": "standalone",
+  "background_color": "#030712",
+  "theme_color": "#10131f",
+  "icons": [
+    {
+      "src": "/static/image/Birepair.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/image/bipsu.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

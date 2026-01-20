@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Create Client Account · BipSU Repair{% endblock %}
+{% block content %}
+{% include 'partials/_guest_disclaimer.html' %}
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">Client portal</p>
+        <h1>Sign up for repair access</h1>
+        <p>Set up your profile once, then book appointments and receive updates instantly.</p>
+    </div>
+</section>
+
+<section class="card">
+    <form method="post" class="form-grid">
+        {% csrf_token %}
+        <label>
+            <span>Full name</span>
+            {{ form.full_name }}
+        </label>
+        <label>
+            <span>Campus email</span>
+            {{ form.email }}
+        </label>
+        <label>
+            <span>Student ID (optional)</span>
+            {{ form.student_id }}
+        </label>
+        <label>
+            <span>Contact number</span>
+            {{ form.contact_number }}
+        </label>
+        <label>
+            <span>School program</span>
+            {{ form.school_program }}
+            {% if form.school_program.errors %}
+                <small class="field-error">{{ form.school_program.errors|join:', ' }}</small>
+            {% endif %}
+        </label>
+        <label>
+            <span>Password</span>
+            {{ form.password }}
+        </label>
+        <label>
+            <span>Confirm password</span>
+            {{ form.confirm_password }}
+        </label>
+        <label class="policy-checkbox full-width">
+            {{ form.accept_policies }}
+            <span>
+                I agree to the <button type="button" class="ghost-link" data-policy-modal-trigger data-policy="tos">Terms of Service</button>,
+                <button type="button" class="ghost-link" data-policy-modal-trigger data-policy="privacy">Privacy Policy</button>, and
+                <button type="button" class="ghost-link" data-policy-modal-trigger data-policy="tracking">Appointment Tracking Policy</button>.
+            </span>
+        </label>
+        {% if form.non_field_errors %}
+            <div class="form-errors full-width">{{ form.non_field_errors }}</div>
+        {% endif %}
+        <button class="btn primary full-width" type="submit">Create account</button>
+        <p class="micro full-width">
+            Already registered? <a href="{% url 'client_login' %}">Sign in instead</a>.
+        </p>
+    </form>
+</section>
+
+{% endblock %}

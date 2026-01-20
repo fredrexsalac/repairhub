@@ -1,0 +1,7 @@
+<datalist id="brand-options">
+    {% for device, choices in brand_map.items %}
+        {% for value, label in choices %}
+            <option value="{{ label }}">{{ label }}</option>
+        {% endfor %}
+    {% endfor %}
+</datalist>

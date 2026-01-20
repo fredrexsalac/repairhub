@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Crew Registration · BipSU Repair{% endblock %}
+{% block content %}
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">Technicians only</p>
+        <h1>Create crew access</h1>
+        <p>Share this link manually with trusted teammates. No public entry points are exposed.</p>
+    </div>
+</section>
+
+<section class="card">
+    <form method="post" class="form-grid">
+        {% csrf_token %}
+        <label class="full-width">
+            <span>Full name</span>
+            {{ form.full_name }}
+        </label>
+        <label class="full-width">
+            <span>Username</span>
+            {{ form.username }}
+        </label>
+        <label>
+            <span>Password</span>
+            {{ form.password }}
+        </label>
+        <label>
+            <span>Confirm password</span>
+            {{ form.confirm_password }}
+        </label>
+        {% if form.non_field_errors %}
+            <div class="form-errors full-width">{{ form.non_field_errors }}</div>
+        {% endif %}
+        <button class="btn primary full-width" type="submit">Register technician</button>
+    </form>
+</section>
+{% endblock %}

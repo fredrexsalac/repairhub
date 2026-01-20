@@ -1,0 +1,52 @@
+{% extends "admin_base.html" %}
+{% block title %}Settings · BipSU Repair{% endblock %}
+{% block admin_content %}
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">Settings</p>
+        <h1>Account settings</h1>
+        <p>Update your admin profile and password.</p>
+    </div>
+    <div class="cta-row">
+        <a class="btn ghost" href="{% url 'admin_logout' %}">Log out</a>
+    </div>
+</section>
+
+<section class="card">
+    <h3>Profile</h3>
+    <form method="post" class="form-grid">
+        {% csrf_token %}
+        <input type="hidden" name="update_profile" value="1" />
+        <label>
+            <span>Full name</span>
+            <input class="input-control" type="text" name="full_name" value="{{ admin_user.full_name }}" required />
+        </label>
+        <label>
+            <span>Username</span>
+            <input class="input-control" type="text" name="username" value="{{ admin_user.username }}" required />
+        </label>
+        <button class="btn primary" type="submit">Save profile</button>
+    </form>
+</section>
+
+<section class="card">
+    <h3>Change password</h3>
+    <form method="post" class="form-grid">
+        {% csrf_token %}
+        <input type="hidden" name="change_password" value="1" />
+        <label>
+            <span>Current password</span>
+            <input class="input-control" type="text" name="current_password" required />
+        </label>
+        <label>
+            <span>New password</span>
+            <input class="input-control" type="password" name="new_password" minlength="8" required />
+        </label>
+        <label>
+            <span>Confirm new password</span>
+            <input class="input-control" type="password" name="confirm_password" minlength="8" required />
+        </label>
+        <button class="btn primary" type="submit">Update password</button>
+    </form>
+</section>
+{% endblock %}

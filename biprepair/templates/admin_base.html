@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="admin-shell">
+    <aside class="admin-sidebar">
+        <div class="admin-sidebar__header">
+            <p class="eyebrow">Admin console</p>
+            <h2>Welcome, {{ admin_user.full_name }}</h2>
+        </div>
+        <nav class="admin-nav">
+            <a class="admin-nav__link {% if current_route == 'admin_dashboard' %}is-active{% endif %}" href="{% url 'admin_dashboard' %}">Dashboard</a>
+            <a class="admin-nav__link {% if current_route == 'admin_appointments' or current_route == 'admin_detail' %}is-active{% endif %}" href="{% url 'admin_appointments' %}">Appointments</a>
+            <a class="admin-nav__link {% if current_route == 'admin_messages' %}is-active{% endif %}" href="{% url 'admin_messages' %}">Messages</a>
+            <a class="admin-nav__link {% if current_route == 'admin_clients' or current_route == 'admin_client_detail' %}is-active{% endif %}" href="{% url 'admin_clients' %}">Manage clients</a>
+            <a class="admin-nav__link {% if current_route == 'admin_settings' %}is-active{% endif %}" href="{% url 'admin_settings' %}">Settings</a>
+            <a class="admin-nav__link" href="{% url 'admin_logout' %}">Logout</a>
+        </nav>
+    </aside>
+    <section class="admin-content">
+        {% block admin_content %}{% endblock %}
+    </section>
+</div>
+{% endblock %}

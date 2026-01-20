@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}BipSU Repair Crew · Home{% endblock %}
+{% block content %}
+{% include 'partials/_guest_disclaimer.html' %}
+<section class="hero-card">
+    <div>
+        <p class="eyebrow">Student-run • Appointment only</p>
+        <h1>Device rescue near BipSU hubs.</h1>
+        <p class="lead">
+            Fast, modular replacements for phones and laptops handled on campus hubs.
+            No walk-ins. We meet inside BipSU study areas for safe hand-offs.
+        </p>
+        <div class="cta-row">
+            {% if is_client_authenticated %}
+                <a class="btn primary" href="{% url 'book_appointment' %}">Book an appointment</a>
+            {% else %}
+                <button class="btn primary" type="button" data-client-gate-trigger>Book an appointment</button>
+            {% endif %}
+            <a class="btn ghost" href="{% url 'check_status' %}">Check status</a>
+        </div>
+    </div>
+    <div class="hero-card__note">
+        <h3>Hard limits</h3>
+        <ul>
+            <li>No iPhone battery repairs</li>
+            <li>No soldering or board-level work</li>
+            <li>Only plug-and-play modules</li>
+        </ul>
+        <p class="micro">{{ blocked_notice }}</p>
+    </div>
+</section>
+
+{% if client_user %}
+<section class="client-banner">
+    <div>
+        <p class="eyebrow">Hi {{ client_user.full_name|default:"there" }}</p>
+        <h2>Fast-lane perks for signed-in clients</h2>
+        <p>
+            We already know your contact info, so you can submit a new repair request in under a minute.
+            Need part ETA or meet-up tweaks? Message the crew and we’ll text you right back.
+        </p>
+        <div class="cta-row">
+            <a class="btn primary" href="{% url 'book_appointment' %}">Book another repair</a>
+            <a class="btn ghost" href="{% url 'contact_admin' %}">Message the crew</a>
+        </div>
+    </div>
+    <div class="client-banner__tiles">
+        <article>
+            <strong>Saved profiles</strong>
+            <p>Your preferred hub & contact number auto-fill every form.</p>
+        </article>
+        <article>
+            <strong>Status snapshots</strong>
+            <p>Use “Check status” anytime to see admin notes in real time.</p>
+        </article>
+        <article>
+            <strong>Priority parts sourcing</strong>
+            <p>Clients get first dibs on incoming LCD batches and keyboard kits.</p>
+        </article>
+    </div>
+</section>
+{% endif %}
+
+<section class="services-grid">
+    <header>
+        <p class="eyebrow">What we fix</p>
+        <h2>Safe replacements only</h2>
+        <p>Each repair is performed using modular parts that do not require soldering.</p>
+    </header>
+    <div class="services-grid__columns">
+        <article>
+            <h3>📱 Phones (Android & iPhone)</h3>
+            <ul>
+                <li>LCD / AMOLED replacement</li>
+                <li>Back cover replacement</li>
+                <li>Camera module replacement</li>
+                <li>Speaker replacement</li>
+                <li>Button replacement</li>
+                <li>Charging port module swap</li>
+            </ul>
+            <div class="pill warning">No iPhone battery jobs</div>
+        </article>
+        <article>
+            <h3>💻 Laptops</h3>
+            <ul>
+                <li>LCD replacement</li>
+                <li>Keyboard replacement</li>
+                <li>RAM upgrades (plug-in sticks)</li>
+                <li>SSD / HDD swap</li>
+                <li>Fan replacement</li>
+                <li>Thermal repaste (no soldering)</li>
+            </ul>
+        </article>
+    </div>
+</section>
+
+<section class="disclaimer">
+    <div>
+        <h3>Safety-first workflow</h3>
+        <p>Hand-offs happen in visible BipSU study lounges. Diagnostics are recorded, and we return your device the same day whenever parts are ready.</p>
+    </div>
+    <div>
+        <h3>Unsupported requests</h3>
+        <ul>
+            <li>Battery repairs for iPhones</li>
+            <li>Microsoldering / board-level fixes</li>
+            <li>Liquid damage logic-board work</li>
+        </ul>
+        <p class="micro">Unsupported requests are declined immediately to prevent damage.</p>
+    </div>
+</section>
+{% endblock %}

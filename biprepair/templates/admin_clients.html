@@ -1,0 +1,57 @@
+{% extends "admin_base.html" %}
+{% block title %}Manage Clients · BipSU Repair{% endblock %}
+{% block admin_content %}
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">Accounts</p>
+        <h1>Manage clients</h1>
+        <p>Review registered accounts and quickly disable access when needed.</p>
+    </div>
+    <div class="cta-row">
+        <a class="btn ghost" href="{% url 'admin_logout' %}">Log out</a>
+    </div>
+</section>
+
+<section class="card">
+    <div class="table-wrapper">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Contact</th>
+                    <th>Program</th>
+                    <th>Status</th>
+                    <th>Appointments</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for client in clients %}
+                    <tr>
+                        <td>{{ client.full_name }}</td>
+                        <td>{{ client.email }}</td>
+                        <td>{{ client.contact_number }}</td>
+                        <td>{{ client.get_school_program_display|default:'Not set' }}</td>
+                        <td>
+                            {% if client.is_active %}
+                                <span class="status-chip status-approved">Active</span>
+                            {% else %}
+                                <span class="status-chip status-declined">Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ client.appointment_count }}</td>
+                        <td class="admin-actions">
+                            <a href="{% url 'admin_client_detail' client.id %}">View</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6">No client accounts registered yet.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

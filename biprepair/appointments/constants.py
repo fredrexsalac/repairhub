@@ -1,0 +1,3 @@
+SESSION_ADMIN_KEY = 'admin_user_id'
+SESSION_CLIENT_KEY = 'client_user_id'
+POLICIES_VERSION = '2025-01'

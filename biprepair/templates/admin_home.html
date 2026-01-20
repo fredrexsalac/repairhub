@@ -1,0 +1,52 @@
+{% extends "admin_base.html" %}
+{% block title %}Admin Dashboard · BipSU Repair{% endblock %}
+{% block admin_content %}
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">Portfolio</p>
+        <h1>Welcome, {{ admin_user.full_name }}</h1>
+        <p>Here is today’s operational snapshot and booking trends.</p>
+    </div>
+    <div class="cta-row">
+        <a class="btn ghost" href="{% url 'admin_logout' %}">Log out</a>
+    </div>
+</section>
+
+<section class="admin-stats">
+    <article class="stat-card">
+        <p>Total earnings</p>
+        <h2>₱{{ total_earnings|floatformat:2 }}</h2>
+        <span class="micro">Based on completed appointments</span>
+    </article>
+    <article class="stat-card">
+        <p>Total clients</p>
+        <h2>{{ total_clients }}</h2>
+        <span class="micro">Registered profiles</span>
+    </article>
+    <article class="stat-card">
+        <p>Total appointments</p>
+        <h2>{{ total_appointments }}</h2>
+        <span class="micro">All booking records</span>
+    </article>
+</section>
+
+<section class="admin-charts">
+    <article class="card">
+        <h3>Monthly earnings</h3>
+        <canvas id="earningsChart" height="120"></canvas>
+    </article>
+    <article class="card">
+        <h3>Appointment volume</h3>
+        <canvas id="appointmentsChart" height="120"></canvas>
+    </article>
+</section>
+
+{{ monthly_earnings|json_script:"admin-earnings-data" }}
+{{ monthly_appointments|json_script:"admin-appointments-data" }}
+<script>
+    window.adminDashboardData = {
+        earnings: JSON.parse(document.getElementById('admin-earnings-data').textContent),
+        appointments: JSON.parse(document.getElementById('admin-appointments-data').textContent)
+    };
+</script>
+{% endblock %}

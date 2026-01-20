@@ -1,0 +1,105 @@
+{% extends "admin_base.html" %}
+{% block title %}Message · BipSU Repair{% endblock %}
+{% block admin_content %}
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">Client conversation</p>
+        <h1>{{ contact_message.subject|default:"Messenger conversation" }}</h1>
+        <p>{{ contact_message.client.full_name }} · {{ contact_message.client.email }}</p>
+    </div>
+    <div class="cta-row">
+        <a class="btn ghost" href="{% url 'admin_messages' %}">Back to inbox</a>
+    </div>
+</section>
+
+<section class="admin-message-pane messenger-pane card">
+    <header class="chat-header">
+        <div class="chat-partner">
+            <div class="avatar-circle avatar-circle--lg" aria-hidden="true">{{ client_initials }}</div>
+            <div>
+                <strong>{{ contact_message.client.full_name }}</strong>
+                <span>Prefers {{ contact_message.get_preferred_contact_display }}</span>
+            </div>
+        </div>
+        <span class="status-chip status-{{ contact_message.status }}">{{ contact_message.get_status_display }}</span>
+    </header>
+
+    <div class="thread-window">
+        {% if thread_messages %}
+            {% for message in thread_messages %}
+                <article class="bubble bubble--client">
+                    <div class="bubble__avatar" aria-hidden="true">{{ client_initials }}</div>
+                    <div class="bubble__body">
+                        <div class="bubble__meta">
+                            <strong>{{ message.client.full_name }}</strong>
+                            <small>{{ message.created_at|date:"M j, Y · g:ia" }}</small>
+                        </div>
+                        {% if message.subject %}
+                            <p class="bubble__subject">{{ message.subject }}</p>
+                        {% endif %}
+                        <p>{{ message.body|linebreaksbr }}</p>
+                        <div class="bubble__footer">
+                            <span class="status-chip status-{{ message.status }}">{{ message.get_status_display }}</span>
+                            <small>{{ message.get_preferred_contact_display }}</small>
+                        </div>
+                    </div>
+                </article>
+                {% for reply in message.replies.all %}
+                    <article class="bubble bubble--admin">
+                        <div class="bubble__avatar" aria-hidden="true">
+                            {{ reply.display_admin_initials|default:admin_initials }}
+                        </div>
+                        <div class="bubble__body">
+                            <div class="bubble__meta">
+                                <strong>{{ reply.display_admin_name }}</strong>
+                                <small>{{ reply.created_at|date:"M j, Y · g:ia" }}</small>
+                            </div>
+                            <p>{{ reply.body|linebreaksbr }}</p>
+                        </div>
+                    </article>
+                {% empty %}
+                    {% if message.admin_reply %}
+                        <article class="bubble bubble--admin">
+                            <div class="bubble__avatar" aria-hidden="true">{{ admin_initials }}</div>
+                            <div class="bubble__body">
+                                <div class="bubble__meta">
+                                    <strong>{{ admin_user.full_name }}</strong>
+                                    <small>{{ message.updated_at|date:"M j, Y · g:ia" }}</small>
+                                </div>
+                                <p>{{ message.admin_reply|linebreaksbr }}</p>
+                            </div>
+                        </article>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        {% else %}
+            <div class="messenger-empty">
+                <p class="messenger-empty__title">No messages yet</p>
+                <p>All past and future Contact Admin messages will appear here.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="admin-thread-meta">
+        <small>Last updated {{ contact_message.updated_at|timesince }} ago</small>
+        <small>Created {{ contact_message.created_at|date:"M j, Y · g:ia" }}</small>
+    </div>
+
+    <form method="post" class="admin-reply composer">
+        {% csrf_token %}
+        {% if active_message %}
+            <input type="hidden" name="message_id" value="{{ active_message.id }}" />
+        {% endif %}
+        <div class="admin-reply__field">
+            <label for="{{ form.body.id_for_label }}">Write a message</label>
+            {{ form.body }}
+            {% if form.body.errors %}
+                <div class="form-errors">{{ form.body.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="admin-reply__controls">
+            <button class="btn primary" type="submit">Send reply</button>
+        </div>
+    </form>
+</section>
+{% endblock %}

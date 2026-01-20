@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Client Login · BipSU Repair{% endblock %}
+{% block content %}
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">Client portal</p>
+        <h1>Sign in to book repairs</h1>
+        <p>We use your profile to link appointments and send SMS / email alerts.</p>
+    </div>
+</section>
+
+<section class="card">
+    <form method="post" class="form-vertical">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next_url }}">
+        <label>
+            <span>Campus email</span>
+            {{ form.email }}
+        </label>
+        <label>
+            <span>Password</span>
+            {{ form.password }}
+        </label>
+        {% if form.non_field_errors %}
+            <div class="form-errors">{{ form.non_field_errors }}</div>
+        {% endif %}
+        <button class="btn primary full-width" type="submit">Sign in</button>
+        <p class="micro">
+            No account yet? <a href="{% url 'client_register' %}">Create one here</a>.
+        </p>
+    </form>
+</section>
+{% endblock %}

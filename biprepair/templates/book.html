@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block title %}Book Appointment · BipSU Repair{% endblock %}
+{% block content %}
+{% include 'partials/_guest_disclaimer.html' %}
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">Step 1</p>
+        <h1>Book your repair slot</h1>
+        <p>Meet us at a BipSU study hub. Bring your student ID and a quick description of the issue.</p>
+    </div>
+    <div class="callout warning">
+        <strong>Reminder</strong>
+        <p>{{ blocked_notice }}</p>
+    </div>
+</section>
+
+<section class="card">
+    <form method="post"
+          enctype="multipart/form-data"
+          id="appointment-form"
+          data-service-map='{{ service_map_json|safe }}'
+          data-brand-map='{{ brand_map_json|safe }}'
+          data-model-map='{{ model_map_json|safe }}'
+          data-service-pricing='{{ service_pricing_json|safe }}'
+          data-gcash-contact="https://www.facebook.com/fredrexsalac">
+        {% csrf_token %}
+        <div class="form-grid" data-model-map='{{ model_map_json|safe }}'>
+            <label>
+                <span>Full name</span>
+                {{ form.full_name }}
+            </label>
+            <label>
+                <span>Contact number</span>
+                {{ form.contact_number }}
+            </label>
+            <label>
+                <span>Email (optional)</span>
+                {{ form.notification_email }}
+            </label>
+            <label>
+                <span>Device type</span>
+                {{ form.device_type }}
+            </label>
+            <label class="model-field">
+                <span>Brand &amp; model</span>
+                {{ form.brand_model }}
+                <div id="model-suggestions" class="suggestion-box" hidden></div>
+            </label>
+            <label class="manufacturer-field">
+                <span>Manufacturer</span>
+                {{ form.device_brand }}
+                <div id="brand-suggestions" class="suggestion-box" hidden></div>
+            </label>
+            <label>
+                <span>Service type</span>
+                {{ form.service_type }}
+            </label>
+            <div class="service-price-card full-width" id="service-price-card">
+                <div>
+                    <p class="eyebrow">Estimated total</p>
+                    <h3 id="service-price-value">Select a service to preview cost</h3>
+                </div>
+                <p class="micro" id="service-payment-note">
+                    Payment through cash or GCash after onsite diagnostics.
+                </p>
+                <a class="gcash-link" id="gcash-contact-link" href="https://www.facebook.com/fredrexsalac" target="_blank" rel="noopener" aria-label="Message the crew on Facebook" hidden>
+                    <span class="gcash-link__icon" aria-hidden="true">💬</span>
+                    <span>Need the GCash QR? Tap to message the admin service.</span>
+                </a>
+            </div>
+            <div class="payment-field full-width">
+                <span class="field-label">Payment preference</span>
+                <div class="payment-options">
+                    {{ form.payment_method }}
+                </div>
+                <p class="micro">GCash payments are pre-arranged via Messenger. Cash meet-ups happen during device drop-off/pickup.</p>
+            </div>
+            <label>
+                <span>Preferred date &amp; time</span>
+                {{ form.preferred_datetime }}
+            </label>
+            <label>
+                <span>Study hub</span>
+                {{ form.location }}
+            </label>
+            <label>
+                <span>Pickup notes (optional)</span>
+                {{ form.location_notes }}
+            </label>
+            <label class="full-width">
+                <span>Issue description</span>
+                {{ form.issue_description }}
+            </label>
+            <label class="full-width">
+                <span>Photo proof (optional)</span>
+                {{ form.proof_image }}
+            </label>
+        </div>
+        {% if form.non_field_errors %}
+            <div class="form-errors">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+        <div class="alert info" id="service-warning" hidden>
+            <strong>Heads up:</strong>
+            <span></span>
+        </div>
+        <div class="policy-consent-row">
+            <label class="policy-checkbox">
+                {{ form.accept_booking_policies }}
+                <span>
+                    I have read and agree to the
+                    <button type="button" class="ghost-link" data-policy-modal-trigger data-policy="tos">Terms of Service</button>
+                    and
+                    <button type="button" class="ghost-link" data-policy-modal-trigger data-policy="privacy">Privacy Policy</button>.
+                    <br />
+                    Need a refresher on tracking rules?
+                    <button type="button" class="ghost-link" data-policy-modal-trigger data-policy="tracking">Appointment Tracking Policy</button>
+                    explains how IDs are issued and recovered.
+                </span>
+            </label>
+        </div>
+        <button class="btn primary full-width" type="submit" data-policy-submit disabled aria-disabled="true">
+            Submit appointment
+        </button>
+    </form>
+</section>
+
+<section class="micro-copy">
+    <p>By booking you agree that we only perform modular part swaps. Unsupported requests are declined for your safety.</p>
+</section>
+{% endblock %}

@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% block title %}Contact Admin · BipSU{% endblock %}
+{% block content %}
+<section class="messenger-deck">
+    <aside class="messenger-nav">
+        <header class="messenger-nav__header">
+            <div>
+                <p class="eyebrow">Chats</p>
+                <h2>Contact Admin</h2>
+            </div>
+            <span class="nav-user">{{ client_user.full_name }}</span>
+        </header>
+        <div class="nav-search">
+            <input type="search" placeholder="Search admins" aria-label="Search admins" />
+            <span>⌕</span>
+        </div>
+        <div class="nav-tabs">
+            <button type="button" class="nav-tab is-active">All</button>
+            <button type="button" class="nav-tab">Unread</button>
+            <button type="button" class="nav-tab">Resolved</button>
+        </div>
+        <ul class="messenger-contact-list">
+            {% if admin_profiles %}
+                {% for admin in admin_profiles %}
+                    <li class="messenger-contact messenger-contact--{{ admin.status_tone }}">
+                        <div class="avatar-circle" aria-hidden="true">{{ admin.initials }}</div>
+                        <div class="contact-meta">
+                            <strong>{{ admin.name }}</strong>
+                            <span>@{{ admin.handle }}</span>
+                        </div>
+                        <div class="contact-status-dot" aria-hidden="true"></div>
+                        <small class="contact-status">{{ admin.status_label }}</small>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li class="messenger-contact messenger-contact--empty">
+                    <p>No admin roster is available yet.</p>
+                </li>
+            {% endif %}
+        </ul>
+    </aside>
+
+    <div class="messenger-pane card">
+        <header class="chat-header">
+            <div class="chat-partner">
+                <div class="avatar-circle avatar-circle--lg" aria-hidden="true">
+                    {{ primary_admin.initials|default:'RC' }}
+                </div>
+                <div>
+                    <strong>{{ primary_admin.name|default:'Repair Crew' }}</strong>
+A`                    <span>{{ primary_admin.status_label|default:'Active now' }}</span>
+                </div>
+            </div>
+            <div class="chat-actions" aria-hidden="true">
+                <button type="button" title="Start call">📞</button>
+                <button type="button" title="Video chat">🎥</button>
+                <button type="button" title="Open menu">⋯</button>
+            </div>
+        </header>
+
+        <div class="chat-toolbar" aria-hidden="true">
+            <div class="chat-toolbar__pinned">
+                <span>📌</span>
+                <p>
+                    {{ primary_admin.name|default:'Repair Crew' }} · leave details for faster troubleshooting
+                </p>
+            </div>
+            <div class="chat-toolbar__icons">
+                <button type="button" title="Share photo">📷</button>
+                <button type="button" title="Attach file">📎</button>
+                <button type="button" title="Send emoji">😊</button>
+            </div>
+        </div>
+
+        <div
+            class="thread-window"
+            data-contact-thread
+            data-history-url="{% url 'contact_admin_history' %}"
+            data-client-initials="{{ client_initials }}"
+            data-client-name="{{ client_user.full_name }}"
+            data-admin-initials="{{ primary_admin.initials|default:'RC' }}"
+            data-admin-name="{{ primary_admin.name|default:'Repair Crew' }}"
+            data-empty-title="No messages yet"
+            data-empty-body="Start a conversation using the composer below. Admin replies will appear here."
+        >
+            {% if messages_history %}
+                {% for item in messages_history %}
+                    <article class="bubble bubble--client">
+                        <div class="bubble__avatar" aria-hidden="true">{{ client_initials }}</div>
+                        <div class="bubble__body">
+                            <div class="bubble__meta">
+                                <strong>You</strong>
+                                <small>{{ item.created_at|date:"M j, Y · g:ia" }}</small>
+                            </div>
+                            <p class="bubble__subject">{{ item.subject }}</p>
+                            <p>{{ item.body }}</p>
+                            <div class="bubble__footer">
+                                <span class="status-chip status-{{ item.status }}">{{ item.get_status_display }}</span>
+                                <small>{{ item.get_preferred_contact_display }}</small>
+                            </div>
+                        </div>
+                    </article>
+                    {% if item.admin_reply %}
+                        <article class="bubble bubble--admin">
+                            <div class="bubble__avatar" aria-hidden="true">{{ primary_admin.initials|default:'RC' }}</div>
+                            <div class="bubble__body">
+                                <div class="bubble__meta">
+                                    <strong>{{ primary_admin.name|default:'Repair Crew' }}</strong>
+                                    <small>{{ item.updated_at|date:"M j, Y · g:ia" }}</small>
+                                </div>
+                                <p>{{ item.admin_reply }}</p>
+                            </div>
+                        </article>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <div class="messenger-empty">
+                    <p class="messenger-empty__title">No messages yet</p>
+                    <p>Start a conversation using the composer below. Admin replies will appear here.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <form method="post" class="composer" data-contact-composer>
+            {% csrf_token %}
+            {{ form.subject.as_hidden }}
+            {{ form.preferred_contact.as_hidden }}
+            <div class="composer-input-row">
+                <div class="composer-input">
+                    {{ form.body }}
+                </div>
+                {% if form.non_field_errors %}
+                    <div class="form-errors">{{ form.non_field_errors }}</div>
+                {% endif %}
+                {% if form.subject.errors or form.preferred_contact.errors %}
+                    <div class="form-errors">
+                        {{ form.subject.errors }}
+                        {{ form.preferred_contact.errors }}
+                    </div>
+                {% endif %}
+                <div class="composer-actions">
+                    <button class="btn primary" type="submit">Send</button>
+                    <div class="emoji-picker" data-emoji-root>
+                        <button type="button" class="emoji-trigger" data-emoji-trigger aria-label="Insert emoji" aria-expanded="false">😊</button>
+                        <div class="emoji-panel" data-emoji-panel hidden>
+                            <div class="emoji-panel__row">
+                                <button type="button" data-emoji="😀">😀</button>
+                                <button type="button" data-emoji="😅">😅</button>
+                                <button type="button" data-emoji="😍">😍</button>
+                                <button type="button" data-emoji="🤔">🤔</button>
+                                <button type="button" data-emoji="🙏">🙏</button>
+                                <button type="button" data-emoji="🔥">🔥</button>
+                            </div>
+                            <div class="emoji-panel__row">
+                                <button type="button" data-emoji="👍">👍</button>
+                                <button type="button" data-emoji="💡">💡</button>
+                                <button type="button" data-emoji="🧰">🧰</button>
+                                <button type="button" data-emoji="📍">📍</button>
+                                <button type="button" data-emoji="📸">📸</button>
+                                <button type="button" data-emoji="⏳">⏳</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const pickerRoot = document.querySelector('[data-emoji-root]');
+        if (!pickerRoot) return;
+        const trigger = pickerRoot.querySelector('[data-emoji-trigger]');
+        const panel = pickerRoot.querySelector('[data-emoji-panel]');
+        const messageField = document.querySelector('.composer textarea');
+
+        const closePanel = () => {
+            panel.hidden = true;
+            trigger.setAttribute('aria-expanded', 'false');
+        };
+
+        trigger.addEventListener('click', (event) => {
+            event.stopPropagation();
+            const isHidden = panel.hidden;
+            panel.hidden = !isHidden;
+            trigger.setAttribute('aria-expanded', String(!isHidden));
+        });
+
+        panel.addEventListener('click', (event) => {
+            const button = event.target.closest('button[data-emoji]');
+            if (!button || !messageField) return;
+            const emoji = button.dataset.emoji;
+            const start = messageField.selectionStart || messageField.value.length;
+            const end = messageField.selectionEnd || messageField.value.length;
+            const value = messageField.value;
+            messageField.value = `${value.slice(0, start)}${emoji} ${value.slice(end)}`;
+            messageField.focus();
+            messageField.selectionStart = messageField.selectionEnd = start + emoji.length + 1;
+            messageField.dispatchEvent(new Event('input', { bubbles: true }));
+            closePanel();
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!panel.hidden && !pickerRoot.contains(event.target)) {
+                closePanel();
+            }
+        });
+    });
+</script>
+{% endblock %}

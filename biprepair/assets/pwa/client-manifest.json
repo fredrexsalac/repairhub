@@ -1,0 +1,21 @@
+{
+  "name": "BiPSU Repair - Client",
+  "short_name": "BiPSU Client",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#030712",
+  "theme_color": "#1a1f2c",
+  "icons": [
+    {
+      "src": "/static/image/Birepair.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/image/bipsu.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

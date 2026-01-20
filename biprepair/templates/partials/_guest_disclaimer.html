@@ -1,0 +1,23 @@
+{% if not is_client_authenticated %}
+<div class="guest-disclaimer" data-disclaimer-banner data-disclaimer-key="biprepair_independent_notice">
+    <div>
+        <p class="eyebrow">Independent Service Notice</p>
+        <p>
+            This platform is independently operated by a student technician and is not affiliated with or endorsed by
+            Biliran Province State University (BiPSU). BiPSU focuses solely on providing quality education and does not
+            offer gadget repair services.
+        </p>
+        <p>
+            Need help or have concerns? Reach us on
+            <a href="https://www.facebook.com/profile.php?id=61586701440933" target="_blank" rel="noopener">
+                Facebook (BiPSU Tech Repair Hub)
+            </a>.
+        </p>
+        <p class="disclaimer-clock">
+            Current date &amp; time:
+            <span data-live-clock>Loading…</span>
+        </p>
+    </div>
+    <button type="button" class="btn ghost" data-disclaimer-dismiss>Got it</button>
+</div>
+{% endif %}

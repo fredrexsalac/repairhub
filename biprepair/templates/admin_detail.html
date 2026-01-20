@@ -1,0 +1,300 @@
+{% extends "admin_base.html" %}
+{% load static %}
+{% block title %}Manage {{ appointment.appointment_id }} · BipSU Repair{% endblock %}
+{% block admin_content %}
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">Appointment detail</p>
+        <h1>{{ appointment.full_name }}</h1>
+        <p>{{ appointment.get_device_type_display }} • {{ appointment.service_label }}</p>
+    </div>
+    <div class="cta-row">
+        <a class="btn ghost" href="{% url 'admin_appointments' %}">← Back to list</a>
+        <a class="btn ghost" href="{% url 'admin_logout' %}">Log out</a>
+    </div>
+</section>
+
+<section class="card">
+    <dl class="detail-grid">
+        <div>
+            <dt>Appointment ID</dt>
+            <dd>{{ appointment.appointment_id }}</dd>
+        </div>
+        <div>
+            <dt>Contact</dt>
+            <dd>{{ appointment.contact_number }}</dd>
+        </div>
+        <div>
+            <dt>Brand &amp; model</dt>
+            <dd>{{ appointment.brand_model }}</dd>
+        </div>
+        <div>
+            <dt>Preferred schedule</dt>
+            <dd>{{ appointment.preferred_datetime|date:"M d, Y h:i A" }}</dd>
+        </div>
+        <div>
+            <dt>Location</dt>
+            <dd>{{ appointment.get_location_display }}</dd>
+        </div>
+        {% if appointment.client %}
+        <div>
+            <dt>Client program</dt>
+            <dd>{{ appointment.client.get_school_program_display|default:'Not set' }}</dd>
+        </div>
+        {% endif %}
+        <div>
+            <dt>Payment preference</dt>
+            <dd>{{ appointment.get_payment_method_display }}</dd>
+        </div>
+        <div>
+            <dt>Service</dt>
+            <dd>{{ appointment.service_label }}</dd>
+        </div>
+        {% if appointment.location_notes %}
+        <div>
+            <dt>Pickup notes</dt>
+            <dd>{{ appointment.location_notes }}</dd>
+        </div>
+        {% endif %}
+    </dl>
+    <div class="detail-notes">
+        <h3>Issue description</h3>
+        <p>{{ appointment.issue_description }}</p>
+    </div>
+    <div class="detail-actions">
+        <button
+            type="button"
+            class="btn receipt-btn"
+            data-receipt-trigger
+            data-receipt-id="{{ appointment.appointment_id }}"
+            data-receipt-name="{{ appointment.full_name }}"
+            data-receipt-service="{{ appointment.service_label }}"
+            data-receipt-price="{{ appointment.quoted_price|default_if_none:0|floatformat:2 }}"
+            data-receipt-date="{{ appointment.preferred_datetime|date:'M d, Y h:i A' }}"
+            data-receipt-contact="{{ appointment.contact_number }}"
+            data-receipt-brand="{{ appointment.brand_model }}"
+            data-receipt-location="{{ appointment.get_location_display }}"
+            data-receipt-payment="{{ appointment.get_payment_method_display }}"
+            data-receipt-program="{% if appointment.client %}{{ appointment.client.get_school_program_display|default:'Not set' }}{% else %}N/A{% endif %}"
+            data-receipt-issue="{{ appointment.issue_description|default:'No issue description provided.'|escape }}"
+            data-receipt-logo-primary="{% static 'image/bipsu.png' %}"
+            data-receipt-logo-secondary="{% static 'image/Birepair.png' %}"
+        >
+            Generate receipt
+        </button>
+    </div>
+</section>
+
+<div class="receipt-modal" data-receipt-modal hidden>
+    <div class="receipt-modal__scrim" data-receipt-close></div>
+    <div class="receipt-modal__panel">
+        <header class="receipt-modal__header">
+            <div>
+                <p class="eyebrow">Preview</p>
+                <h2>Service receipt</h2>
+            </div>
+            <button type="button" class="receipt-modal__close" data-receipt-close>×</button>
+        </header>
+        <section class="receipt-card">
+            <div class="receipt-card__logos">
+                <img data-field="logoPrimary" alt="BiPSU seal" />
+                <img data-field="logoSecondary" alt="Repair hub logo" />
+            </div>
+            <p><strong>Appointment ID:</strong> <span data-field="id"></span></p>
+            <p><strong>Client:</strong> <span data-field="name"></span></p>
+            <p><strong>Service:</strong> <span data-field="service"></span></p>
+            <p><strong>Preferred schedule:</strong> <span data-field="date"></span></p>
+            <p><strong>Contact:</strong> <span data-field="contact"></span></p>
+            <p><strong>Device:</strong> <span data-field="brand"></span></p>
+            <p><strong>Location:</strong> <span data-field="location"></span></p>
+            <p><strong>Payment:</strong> <span data-field="payment"></span></p>
+            <p><strong>Client program:</strong> <span data-field="program"></span></p>
+            <div class="receipt-card__barcode">
+                <img data-field="barcode" alt="Receipt barcode" />
+            </div>
+            <p class="receipt-card__total">Total: ₱<span data-field="price"></span></p>
+            <p><strong>Issue details:</strong></p>
+            <p class="receipt-card__issue" data-field="issue"></p>
+            <p class="receipt-card__thanks">Thank you for trusting the BiPSU Student-Technician Repair Hub.</p>
+        </section>
+        <footer class="receipt-modal__footer">
+            <button type="button" class="btn receipt-btn" data-receipt-download>Download PDF</button>
+        </footer>
+    </div>
+</div>
+
+{% block extra_js %}
+{{ block.super }}
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const trigger = document.querySelector('[data-receipt-trigger]');
+        const modal = document.querySelector('[data-receipt-modal]');
+        if (!trigger || !modal) return;
+        const closeButtons = modal.querySelectorAll('[data-receipt-close]');
+        const downloadBtn = modal.querySelector('[data-receipt-download]');
+        const fieldMap = {
+            id: modal.querySelector('[data-field="id"]'),
+            name: modal.querySelector('[data-field="name"]'),
+            service: modal.querySelector('[data-field="service"]'),
+            price: modal.querySelector('[data-field="price"]'),
+            date: modal.querySelector('[data-field="date"]'),
+            contact: modal.querySelector('[data-field="contact"]'),
+            brand: modal.querySelector('[data-field="brand"]'),
+            location: modal.querySelector('[data-field="location"]'),
+            payment: modal.querySelector('[data-field="payment"]'),
+            program: modal.querySelector('[data-field="program"]'),
+            issue: modal.querySelector('[data-field="issue"]'),
+            logoPrimary: modal.querySelector('[data-field="logoPrimary"]'),
+            logoSecondary: modal.querySelector('[data-field="logoSecondary"]'),
+            barcode: modal.querySelector('[data-field="barcode"]'),
+        };
+
+        const generateBarcodeDataUrl = (value) => {
+            if (typeof JsBarcode === 'undefined') return null;
+            const canvas = document.createElement('canvas');
+            try {
+                JsBarcode(canvas, value, {
+                    format: 'CODE128',
+                    width: 2,
+                    height: 60,
+                    displayValue: false,
+                    margin: 0,
+                });
+                return canvas.toDataURL('image/png');
+            } catch (error) {
+                console.error('Unable to generate barcode', error);
+                return null;
+            }
+        };
+
+        const fillFields = () => {
+            fieldMap.id.textContent = trigger.dataset.receiptId;
+            fieldMap.name.textContent = trigger.dataset.receiptName;
+            fieldMap.service.textContent = trigger.dataset.receiptService;
+            fieldMap.price.textContent = trigger.dataset.receiptPrice;
+            fieldMap.date.textContent = trigger.dataset.receiptDate;
+            fieldMap.contact.textContent = trigger.dataset.receiptContact;
+            fieldMap.brand.textContent = trigger.dataset.receiptBrand;
+            fieldMap.location.textContent = trigger.dataset.receiptLocation;
+            fieldMap.payment.textContent = trigger.dataset.receiptPayment;
+            fieldMap.program.textContent = trigger.dataset.receiptProgram;
+            fieldMap.issue.textContent = trigger.dataset.receiptIssue;
+            fieldMap.logoPrimary.src = trigger.dataset.receiptLogoPrimary;
+            fieldMap.logoSecondary.src = trigger.dataset.receiptLogoSecondary;
+            const barcodeData = generateBarcodeDataUrl(trigger.dataset.receiptId);
+            if (barcodeData) {
+                fieldMap.barcode.src = barcodeData;
+                fieldMap.barcode.alt = `Barcode for ${trigger.dataset.receiptId}`;
+                fieldMap.barcode.dataset.barcodeData = barcodeData;
+            }
+        };
+
+        const openModal = () => {
+            fillFields();
+            modal.hidden = false;
+            document.body.classList.add('modal-open');
+        };
+
+        const closeModal = () => {
+            modal.hidden = true;
+            document.body.classList.remove('modal-open');
+        };
+
+        trigger.addEventListener('click', openModal);
+        closeButtons.forEach((btn) => btn.addEventListener('click', closeModal));
+        modal.addEventListener('click', (event) => {
+            if (event.target === modal) closeModal();
+        });
+
+        downloadBtn?.addEventListener('click', () => {
+            const barcodeData = fieldMap.barcode.dataset.barcodeData || '';
+            const receiptHtml = `<!doctype html>
+                <html>
+                    <head>
+                        <meta charset="utf-8" />
+                        <title>Receipt ${fieldMap.id.textContent}</title>
+                        <style>
+                            body { font-family: 'Inter', system-ui, sans-serif; padding: 2.5rem; color: #0a0c12; }
+                            header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+                            header img { height: 60px; border-radius: 50%; }
+                            h1 { margin-bottom: 0.5rem; }
+                            .row { margin-bottom: 0.4rem; }
+                            .section { margin-top: 1.2rem; }
+                            .total { margin-top: 1.5rem; font-size: 1.3rem; font-weight: 600; }
+                            .thanks { margin-top: 2rem; font-style: italic; }
+                            .barcode { margin:1.2rem 0; text-align:center; }
+                            .barcode img { height: 70px; }
+                        </style>
+                    </head>
+                    <body>
+                        <header>
+                            <img src="${fieldMap.logoPrimary.src}" alt="BiPSU logo" />
+                            <div>
+                                <h1>Service receipt</h1>
+                                <p>Receipt ${fieldMap.id.textContent}</p>
+                            </div>
+                            <img src="${fieldMap.logoSecondary.src}" alt="Repair hub logo" />
+                        </header>
+                        <section>
+                            <p class="row"><strong>Appointment:</strong> ${fieldMap.id.textContent}</p>
+                            <p class="row"><strong>Client:</strong> ${fieldMap.name.textContent}</p>
+                            <p class="row"><strong>Contact:</strong> ${fieldMap.contact.textContent}</p>
+                            <p class="row"><strong>Device:</strong> ${fieldMap.brand.textContent}</p>
+                            <p class="row"><strong>Service:</strong> ${fieldMap.service.textContent}</p>
+                            <p class="row"><strong>Schedule:</strong> ${fieldMap.date.textContent}</p>
+                            <p class="row"><strong>Location:</strong> ${fieldMap.location.textContent}</p>
+                            <p class="row"><strong>Payment:</strong> ${fieldMap.payment.textContent}</p>
+                            <p class="row"><strong>Client program:</strong> ${fieldMap.program.textContent}</p>
+                        </section>
+                        <div class="barcode">${barcodeData ? `<img src="${barcodeData}" alt="Barcode" />` : ''}</div>
+                        <section class="section">
+                            <p><strong>Issue details:</strong></p>
+                            <p>${fieldMap.issue.textContent}</p>
+                        </section>
+                        <p class="total">Total: ₱${fieldMap.price.textContent}</p>
+                        <p class="thanks">Thank you for trusting the BiPSU Student-Technician Repair Hub.</p>
+                    </body>
+                </html>`;
+            const printWindow = window.open('', '_blank', 'width=600,height=800');
+            if (!printWindow) {
+                alert('Please allow pop-ups to download the receipt.');
+                return;
+            }
+            printWindow.document.open();
+            printWindow.document.write(receiptHtml);
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+        });
+    });
+</script>
+{% endblock %}
+
+<section class="card">
+    <h3>Update status</h3>
+    {% if is_locked %}
+        <p class="alert warning">This appointment is locked because parts have been ordered or the job is finalized.</p>
+    {% endif %}
+    <form method="post" class="form-grid">
+        {% csrf_token %}
+        <label>
+            <span>Status</span>
+            {{ form.status }}
+        </label>
+        <label>
+            <span>Quoted price (₱)</span>
+            {{ form.quoted_price }}
+        </label>
+        <label>
+            <span>Replacement part ordered?</span>
+            {{ form.parts_ordered }}
+        </label>
+        <label class="full-width">
+            <span>Admin notes</span>
+            {{ form.admin_notes }}
+        </label>
+        <button class="btn primary full-width" type="submit">Save changes</button>
+    </form>
+</section>
+{% endblock %}

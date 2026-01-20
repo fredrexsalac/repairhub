@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Check Appointment Status · BipSU Repair{% endblock %}
+{% block content %}
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">Step 2</p>
+        <h1>Track your repair</h1>
+        <p>Use the appointment ID we texted or your contact number.</p>
+    </div>
+    <div class="callout">
+        <strong>Tip</strong>
+        <p>Pending = waiting for admin review. Declined = unsupported request.</p>
+    </div>
+</section>
+
+<section class="card">
+    <form method="post" class="status-search">
+        {% csrf_token %}
+        <label>
+            <span>Appointment ID</span>
+            {{ form.appointment_id }}
+        </label>
+        <label>
+            <span>Contact number</span>
+            {{ form.contact_number }}
+        </label>
+        <button class="btn primary full-width" type="submit">Search</button>
+    </form>
+    {% if form.non_field_errors %}
+        <div class="form-errors">{{ form.non_field_errors }}</div>
+    {% endif %}
+</section>
+
+{% if client_appointments %}
+    <section class="status-result">
+        <header class="section-header">
+            <div>
+                <p class="eyebrow">Your records</p>
+                <h2>Recent appointments</h2>
+            </div>
+        </header>
+        {% for appointment in client_appointments %}
+            <article class="status-result-card">
+                <header>
+                    <strong>{{ appointment.appointment_id }}</strong>
+                    <span class="status-chip status-{{ appointment.status }}">{{ appointment.get_status_display }}</span>
+                </header>
+                <p>{{ appointment.get_device_type_display }} • {{ appointment.service_label }}</p>
+                <p><small>{{ appointment.preferred_datetime|date:"M d, Y h:i A" }} @ {{ appointment.get_location_display }}</small></p>
+                {% if appointment.admin_notes %}
+                    <p class="micro">Notes: {{ appointment.admin_notes }}</p>
+                {% endif %}
+            </article>
+        {% empty %}
+            <p class="micro">No appointments yet.</p>
+        {% endfor %}
+    </section>
+{% endif %}
+
+{% if results %}
+    <section class="status-result">
+        {% for appointment in results %}
+            <article class="status-result-card">
+                <header>
+                    <strong>{{ appointment.appointment_id }}</strong>
+                    <span class="status-chip status-{{ appointment.status }}">{{ appointment.get_status_display }}</span>
+                </header>
+                <p>{{ appointment.full_name }} • {{ appointment.get_device_type_display }} • {{ appointment.service_label }}</p>
+                <p><small>{{ appointment.preferred_datetime|date:"M d, Y h:i A" }} @ {{ appointment.get_location_display }}</small></p>
+                {% if appointment.admin_notes %}
+                    <p class="micro">Notes: {{ appointment.admin_notes }}</p>
+                {% endif %}
+            </article>
+        {% endfor %}
+    </section>
+{% elif results is not none %}
+    <p class="micro">No records found.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Privacy Policy · BiPSU Repair{% endblock %}
+{% block content %}
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">Policies</p>
+        <h1>Privacy Policy</h1>
+        <p>How we collect, store, and use information during repair requests.</p>
+    </div>
+</section>
+
+<section class="card policy-card">
+    {% include 'policies/_privacy_body.html' %}
+    <p class="micro">Effective January 2026 • Built around R.A. 10173 (Data Privacy Act).</p>
+</section>
+{% endblock %}
