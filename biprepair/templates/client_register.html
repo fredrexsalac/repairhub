@@ -16,18 +16,30 @@
         <label>
             <span>Full name</span>
             {{ form.full_name }}
+            {% if form.full_name.errors %}
+                <small class="field-error">{{ form.full_name.errors|join:', ' }}</small>
+            {% endif %}
         </label>
         <label>
             <span>Campus email</span>
             {{ form.email }}
+            {% if form.email.errors %}
+                <small class="field-error">{{ form.email.errors|join:', ' }}</small>
+            {% endif %}
         </label>
         <label>
             <span>Student ID (optional)</span>
             {{ form.student_id }}
+            {% if form.student_id.errors %}
+                <small class="field-error">{{ form.student_id.errors|join:', ' }}</small>
+            {% endif %}
         </label>
         <label>
             <span>Contact number</span>
             {{ form.contact_number }}
+            {% if form.contact_number.errors %}
+                <small class="field-error">{{ form.contact_number.errors|join:', ' }}</small>
+            {% endif %}
         </label>
         <label>
             <span>School program</span>
@@ -37,12 +49,25 @@
             {% endif %}
         </label>
         <label>
+            <span>Student classification</span>
+            {{ form.student_type }}
+            {% if form.student_type.errors %}
+                <small class="field-error">{{ form.student_type.errors|join:', ' }}</small>
+            {% endif %}
+        </label>
+        <label>
             <span>Password</span>
             {{ form.password }}
+            {% if form.password.errors %}
+                <small class="field-error">{{ form.password.errors|join:', ' }}</small>
+            {% endif %}
         </label>
         <label>
             <span>Confirm password</span>
             {{ form.confirm_password }}
+            {% if form.confirm_password.errors %}
+                <small class="field-error">{{ form.confirm_password.errors|join:', ' }}</small>
+            {% endif %}
         </label>
         <label class="policy-checkbox full-width">
             {{ form.accept_policies }}
@@ -51,6 +76,9 @@
                 <button type="button" class="ghost-link" data-policy-modal-trigger data-policy="privacy">Privacy Policy</button>, and
                 <button type="button" class="ghost-link" data-policy-modal-trigger data-policy="tracking">Appointment Tracking Policy</button>.
             </span>
+            {% if form.accept_policies.errors %}
+                <small class="field-error">{{ form.accept_policies.errors|join:', ' }}</small>
+            {% endif %}
         </label>
         {% if form.non_field_errors %}
             <div class="form-errors full-width">{{ form.non_field_errors }}</div>
