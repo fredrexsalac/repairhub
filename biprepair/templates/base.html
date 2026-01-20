@@ -23,6 +23,18 @@
       data-client-authenticated="{% if is_client_authenticated %}true{% else %}false{% endif %}"
       data-client-gate-disabled="{% if current_route == 'client_login' or current_route == 'client_register' or current_route == 'admin_login' or current_route == 'admin_register' or current_route == 'admin_dashboard' or current_route == 'admin_detail' or current_route == 'admin_root' %}true{% else %}false{% endif %}">
     <div class="backdrop"></div>
+    <div class="install-banner" data-install-banner hidden>
+        <div class="shell install-banner__inner">
+            <div class="install-banner__copy">
+                <p class="eyebrow">Install app</p>
+                <p>Add BiPSU Repair to your phone for one-tap access.</p>
+            </div>
+            <div class="install-banner__actions">
+                <button class="ghost-link install-banner__dismiss" type="button" aria-label="Dismiss install banner" data-install-dismiss>✕</button>
+                <button class="btn primary" type="button" data-install-trigger>Install app</button>
+            </div>
+        </div>
+    </div>
     <header class="site-header">
         <div class="shell">
             <a class="logo" href="{% url 'home' %}">
