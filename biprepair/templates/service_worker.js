@@ -3,8 +3,7 @@ const APP_SHELL = [
   '/',
   '{% static "css/styles.css" %}',
   '{% static "js/app.js" %}',
-  '{% static "image/Birepair.png" %}',
-  '{% static "image/bipsu.png" %}'
+  '{% static "image/Birepair.png" %}'
 ];
 
 self.addEventListener('install', (event) => {

@@ -539,19 +539,21 @@ a {
     color: #fff;
 }
 
-.logo__marks {
-    display: flex;
-    gap: 0.4rem;
-}
-
-.logo__marks img {
+.logo__mark {
     width: 48px;
     height: 48px;
     border-radius: 999px;
-    object-fit: cover;
+    display: grid;
+    place-items: center;
     border: 2px solid rgba(255, 255, 255, 0.18);
     box-shadow: 0 0 12px rgba(97, 240, 200, 0.15);
     background: rgba(255, 255, 255, 0.08);
+}
+
+.logo__mark img {
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
 }
 
 .brand-eyebrow {

@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const isMobile = /iphone|ipad|android|mobile/i.test(navigator.userAgent);
         if (!isMobile) return;
 
-        const appLabel = installBanner.dataset.installAppLabel || 'BiPSU Repair';
+        const appLabel = installBanner.dataset.installAppLabel || 'Student-Technician Repair HUB';
         if (installCopyEl) {
             installCopyEl.textContent = `Add ${appLabel} to your device for one-tap access.`;
         }

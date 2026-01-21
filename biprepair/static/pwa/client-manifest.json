@@ -1,6 +1,6 @@
 {
-  "name": "BiPSU Repair - Client",
-  "short_name": "BiPSU Client",
+  "name": "Student-Technician Repair HUB",
+  "short_name": "STRH Client",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -13,7 +13,7 @@
       "type": "image/png"
     },
     {
-      "src": "/static/image/bipsu.png",
+      "src": "/static/image/Birepair.png",
       "sizes": "512x512",
       "type": "image/png"
     }

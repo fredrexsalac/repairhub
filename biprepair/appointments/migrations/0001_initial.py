@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
                 ('service_type', models.CharField(max_length=50)),
                 ('issue_description', models.TextField()),
                 ('preferred_datetime', models.DateTimeField()),
-                ('location', models.CharField(choices=[('bipsu-main', 'BipSU Main Library Hub'), ('bipsu-east', 'BipSU East Walk Study Lounge'), ('bipsu-tech', 'BipSU Tech Quad'), ('offsite', 'Off-site pickup near BipSU')], max_length=50)),
+                ('location', models.CharField(choices=[('meetup-central', 'Central meetup lounge'), ('meetup-east', 'East transit meetup point'), ('meetup-tech', 'Tech plaza drop-off counter'), ('offsite', 'Off-site pickup slot')], max_length=50)),
                 ('status', models.CharField(choices=[('pending', 'Pending'), ('approved', 'Approved'), ('in_progress', 'In Progress'), ('completed', 'Completed'), ('declined', 'Declined - Unsupported')], default='pending', max_length=20)),
                 ('admin_notes', models.TextField(blank=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),

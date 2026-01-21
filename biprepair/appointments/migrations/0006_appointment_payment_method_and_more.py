@@ -38,6 +38,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='appointment',
             name='location',
-            field=models.CharField(choices=[('bipsu-main', 'BipSU Main Library Hub'), ('bipsu-east', 'BipSU TECH 226'), ('bipsu-tech', 'BipSU Student Center')], max_length=50),
+            field=models.CharField(choices=[('meetup-central', 'Central meetup lounge'), ('meetup-east', 'East transit meetup point'), ('meetup-tech', 'Tech plaza drop-off counter')], max_length=50),
         ),
     ]

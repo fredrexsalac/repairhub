@@ -1,6 +1,6 @@
 {
-  "name": "BiPSU Repair - Admin",
-  "short_name": "BiPSU Admin",
+  "name": "Student-Technician Repair HUB – Admin",
+  "short_name": "STRH Admin",
   "start_url": "/admin",
   "scope": "/admin",
   "display": "standalone",
@@ -13,7 +13,7 @@
       "type": "image/png"
     },
     {
-      "src": "/static/image/bipsu.png",
+      "src": "/static/image/Birepair.png",
       "sizes": "512x512",
       "type": "image/png"
     }

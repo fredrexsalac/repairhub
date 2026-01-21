@@ -141,31 +141,31 @@ class Appointment(models.Model):
         DEVICE_ANDROID: {
             'lcd': 600,
             'amoled': 1300,
-            'back_cover': 1500,
-            'camera': 1300,
-            'speaker': 900,
-            'buttons': 800,
+            'back_cover': 300,
+            'camera': 1000,
+            'speaker': 700,
+            'buttons': 500,
             'sub_board': 200,
             'frame': 900,
         },
         DEVICE_IPHONE: {
-            'lcd': 600,
-            'amoled': 1300,
-            'back_cover': 2800,
-            'camera': 3200,
-            'speaker': 1800,
-            'buttons': 1500,
-            'sub_board': 200,
-            'frame': 900,
+            'lcd': 800,
+            'amoled': 1500,
+            'back_cover': 1400,
+            'camera': 3000,
+            'speaker': 1300,
+            'buttons': 1000,
+            'sub_board': 500,
+            'frame': 1000,
         },
         DEVICE_LAPTOP: {
             'laptop_lcd': 2100,
             'keyboard': 2000,
             'ram': 1150,
             'storage': 1500,
-            'fan': 1400,
-            'thermal': 800,
-            'frame': 3400,
+            'fan': 1100,
+            'thermal': 500,
+            'frame': 2000,
             'io_board': 2600,
         },
     }
@@ -941,9 +941,9 @@ class Appointment(models.Model):
     }
 
     LOCATION_CHOICES = [
-        ('bipsu-main', 'BipSU Main Library Hub'),
-        ('bipsu-east', 'BipSU TECH 226'),
-        ('bipsu-tech', 'BipSU Student Center'),
+        ('meetup-central', 'Central meetup lounge'),
+        ('meetup-east', 'East transit meetup point'),
+        ('meetup-tech', 'Tech plaza drop-off counter'),
     ]
 
     client = models.ForeignKey(

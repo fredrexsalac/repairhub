@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}BipSU Device Repair{% endblock %}</title>
+    <title>{% block title %}Student-Technician Repair HUB{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -26,19 +26,18 @@
     <header class="site-header">
         <div class="shell">
             <a class="logo" href="{% url 'home' %}">
-                <div class="logo__marks">
-                    <img src="{% static 'image/Birepair.png' %}" alt="BipSU Repair Crew logo" />
-                    <img src="{% static 'image/bipsu.png' %}" alt="BipSU University seal" />
+                <div class="logo__mark">
+                    <img src="{% static 'image/Birepair.png' %}" alt="Student-Technician Repair HUB emblem" />
                 </div>
                 <div>
-                    <span class="brand-eyebrow">BiPSU Student-Technician Repair Hub</span>
+                    <span class="brand-eyebrow">Independent student technicians</span>
                     <strong>
                         {% if admin_user %}
                             Welcome, {{ admin_user.full_name }}
                         {% elif client_user %}
                             Welcome, {{ client_user.full_name }}
                         {% else %}
-                            Official portal
+                            Student-Technician Repair HUB
                         {% endif %}
                     </strong>
                 </div>
@@ -78,10 +77,10 @@
 
     <footer class="site-footer">
         <div class="shell">
-            <p>Student-run service. Work performed near BipSU study hubs, by appointment only.</p>
+            <p>Student-run service. Work performed by appointment at pre-arranged meetups.</p>
             <div class="footer-meta">
                 <small>
-                    © {% now "Y" %} BipSU Repair Crew • Stay safe, protect your data.
+                    © {% now "Y" %} Student-Technician Repair HUB • Independent repair collective.
                     <span class="footer-links">
                         <a href="{% url 'terms_of_service' %}">Terms</a> •
                         <a href="{% url 'privacy_policy' %}">Privacy</a> •

@@ -1,14 +1,14 @@
 {% extends "base.html" %}
-{% block title %}BipSU Repair Crew · Home{% endblock %}
+{% block title %}Student-Technician Repair HUB · Home{% endblock %}
 {% block content %}
 {% include 'partials/_guest_disclaimer.html' %}
 <section class="hero-card">
     <div>
         <p class="eyebrow">Student-run • Appointment only</p>
-        <h1>Device rescue near BipSU hubs.</h1>
+        <h1>Device rescue run by independent technicians.</h1>
         <p class="lead">
-            Fast, modular replacements for phones and laptops handled on campus hubs.
-            No walk-ins. We meet inside BipSU study areas for safe hand-offs.
+            Fast, modular replacements for phones and laptops handled by screened student-technicians.
+            No walk-ins. We coordinate neutral meet-up spots for safe hand-offs.
         </p>
         <div class="cta-row">
             {% if is_client_authenticated %}
@@ -97,7 +97,7 @@
 <section class="disclaimer">
     <div>
         <h3>Safety-first workflow</h3>
-        <p>Hand-offs happen in visible BipSU study lounges. Diagnostics are recorded, and we return your device the same day whenever parts are ready.</p>
+        <p>Hand-offs happen only in public, well-lit meet-up locations agreed on with each client. Diagnostics are recorded, and we return your device the same day whenever parts are ready.</p>
     </div>
     <div>
         <h3>Unsupported requests</h3>

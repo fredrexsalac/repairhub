@@ -1,13 +1,13 @@
-# BiPSU Repair Hub – Platform Overview
+# Student-Technician Repair HUB – Platform Overview
 
-This document explains the goals, behaviors, and operations of the BiPSU Repair Hub portal. It is written for stakeholders who care about the service experience rather than the underlying framework.
+This document explains the goals, behaviors, and operations of the Student-Technician Repair HUB portal. It is written for stakeholders who care about the service experience rather than the underlying framework.
 
 ---
 
 ## 1. Mission
 
-- Provide a reliable booking channel for students who need device repairs handled inside BiPSU study hubs.
-- Give volunteer technicians a modern dashboard for triaging requests, communicating decisions, and handing off receipts.
+- Provide a reliable booking channel for students who need device repairs handled through independent meetup locations.
+- Give student technicians a modern dashboard for triaging requests, communicating decisions, and handing off receipts.
 - Maintain safety and policy compliance (e.g., no iPhone battery work, no board-level soldering) through every touchpoint.
 
 ---
@@ -26,7 +26,7 @@ This document explains the goals, behaviors, and operations of the BiPSU Repair 
 
 1. **Discover** – Students land on the portal and read service limitations (no soldering, no iPhone battery swaps).
 2. **Book** – They select device type, manufacturer, model, preferred schedule, location hub, and payment preference. Dynamic pricing previews show the estimated labor rate immediately.
-3. **Confirm** – After acknowledging the booking policies, the request is stored with a tracking ID (e.g., `BIP-260116-DKWT`).
+3. **Confirm** – After acknowledging the booking policies, the request is stored with a tracking ID (e.g., `STR-260116-DKWT`).
 4. **Track** – Students can revisit the `/status` page with their tracking ID or contact number to see latest updates.
 5. **Receive** – Once approved or completed, the student can open the receipt modal, see all appointment details, and download a PDF that includes official seals, service breakdown, and a Code128 barcode.
 
@@ -48,7 +48,7 @@ This document explains the goals, behaviors, and operations of the BiPSU Repair 
 - Hard safety rules:
   - Reject iPhone battery keywords both on the client form and inside admin validators.
   - Block soldering / board-level terms via keyword scans and by removing soldering from the service list entirely.
-- Location options are limited to BiPSU-operated study hubs; any special pickup details go into an optional notes field.
+- Location options are limited to pre-screened public meetup spots; any special pickup details go into an optional notes field.
 
 ---
 
@@ -62,8 +62,8 @@ This document explains the goals, behaviors, and operations of the BiPSU Repair 
 
 ## 7. Installable Experience (PWA)
 
-- Students can install **“BiPSU Repair – Client”** from supported browsers, pinning the booking portal to their home screen for quick access.
-- Technicians can install **“BiPSU Repair – Admin”** for an app-like feel when managing the queue during on-site shifts.
+- Students can install **“Student-Technician Repair HUB – Client”** from supported browsers, pinning the booking portal to their home screen for quick access.
+- Technicians can install **“Student-Technician Repair HUB – Admin”** for an app-like feel when managing the queue during on-site shifts.
 - A shared service worker caches the primary shell (home page, admin panel, CSS, JS, logos) for quicker load times and resilience when campus Wi-Fi drops momentarily.
 
 ---
@@ -104,5 +104,5 @@ This document explains the goals, behaviors, and operations of the BiPSU Repair 
 
 ### Contact & Ownership
 
-BiPSU Repair Hub is managed by the student-technician organization at Biliran Province State University. Questions or partnership ideas can be directed to the repair coordinators through the admin portal’s contact workflow.
+The Student-Technician Repair HUB is operated independently by student volunteers. Questions or partnership ideas can be directed to the repair coordinators through the admin portal’s contact workflow.
 

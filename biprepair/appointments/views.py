@@ -57,7 +57,6 @@ def service_worker(_request: HttpRequest) -> HttpResponse:
             static('css/styles.css'),
             static('js/app.js'),
             static('image/Birepair.png'),
-            static('image/bipsu.png'),
         ]
     )
     payload = f"""
