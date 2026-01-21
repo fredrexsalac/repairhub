@@ -942,13 +942,14 @@ class Appointment(models.Model):
     }
 
     LOCATION_CHOICES = [
-        ('meetup-central', 'Central meetup lounge'),
-        ('meetup-east', 'East transit meetup point'),
-        ('meetup-tech', 'Tech plaza drop-off counter'),
+        ('meetup-central', 'Study Hub'),
+        ('meetup-east', 'Tech 226'),
+        ('meetup-tech', 'Student Center'),
+        ('meetup-canteen', 'Canteen'),
     ]
 
     client = models.ForeignKey(
-        ClientAccount,
+        ClientAccount, 
         on_delete=models.SET_NULL,
         related_name='appointments',
         null=True,

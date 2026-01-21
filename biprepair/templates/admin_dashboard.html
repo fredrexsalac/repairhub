@@ -7,9 +7,6 @@
         <h1>Appointments queue</h1>
         <p>Approve safe requests. Decline unsupported ones with a short note.</p>
     </div>
-    <div class="cta-row">
-        <a class="btn ghost" href="{% url 'admin_logout' %}">Log out</a>
-    </div>
 </section>
 
 <section class="card">
@@ -60,6 +57,21 @@
                         <td>{{ appointment.preferred_datetime|date:"M d, Y h:i A" }}</td>
                         <td class="admin-actions">
                             <a href="{% url 'admin_detail' appointment.appointment_id %}">Manage</a>
+                            <form id="delete-form-{{ appointment.appointment_id }}"
+                                  class="admin-delete-form"
+                                  method="post"
+                                  action="{% url 'admin_delete_appointment' appointment.appointment_id %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+                                <button type="button"
+                                        class="admin-delete-btn"
+                                        data-delete-trigger
+                                        data-appointment-id="{{ appointment.appointment_id }}"
+                                        data-appointment-client="{{ appointment.full_name }}"
+                                        data-delete-form="delete-form-{{ appointment.appointment_id }}">
+                                    Delete
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 {% empty %}
@@ -71,4 +83,19 @@
         </table>
     </div>
 </section>
+
+<div class="admin-modal" hidden data-delete-modal>
+    <div class="admin-modal__scrim" data-delete-cancel></div>
+    <div class="admin-modal__panel">
+        <p class="eyebrow">Danger zone</p>
+        <h3 data-delete-modal-title>Delete appointment?</h3>
+        <p data-delete-modal-body>
+            Are you sure you want to delete this appointment?
+        </p>
+        <div class="admin-modal__actions">
+            <button type="button" class="btn ghost" data-delete-cancel>Keep appointment</button>
+            <button type="button" class="btn danger" data-delete-confirm>Yes, delete it</button>
+        </div>
+    </div>
+</div>
 {% endblock %}

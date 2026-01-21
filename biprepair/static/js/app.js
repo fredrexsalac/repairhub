@@ -686,5 +686,63 @@ document.addEventListener('DOMContentLoaded', () => {
         startPolling();
     };
 
+    const initializeDeleteModal = () => {
+        const modal = document.querySelector('[data-delete-modal]');
+        if (!modal) return;
+        const confirmBtn = modal.querySelector('[data-delete-confirm]');
+        const cancelControls = modal.querySelectorAll('[data-delete-cancel]');
+        const titleEl = modal.querySelector('[data-delete-modal-title]');
+        const bodyEl = modal.querySelector('[data-delete-modal-body]');
+        let pendingForm = null;
+
+        const openModal = (context) => {
+            titleEl.textContent = `Delete ${context.id}?`;
+            bodyEl.textContent = `This permanently removes ${context.client}'s request and cannot be undone.`;
+            pendingForm = context.form;
+            modal.hidden = false;
+            bodyEl.closest('.admin-modal__panel')?.focus?.();
+            document.body.classList.add('modal-open');
+        };
+
+        const closeModal = () => {
+            modal.hidden = true;
+            pendingForm = null;
+            document.body.classList.remove('modal-open');
+        };
+
+        document.querySelectorAll('[data-delete-trigger]').forEach((button) => {
+            if (!(button instanceof HTMLButtonElement)) return;
+            button.addEventListener('click', () => {
+                const formId = button.dataset.deleteForm;
+                if (!formId) return;
+                const form = document.getElementById(formId);
+                if (!(form instanceof HTMLFormElement)) return;
+                openModal({
+                    id: button.dataset.appointmentId || 'this appointment',
+                    client: button.dataset.appointmentClient || 'this client',
+                    form,
+                });
+            });
+        });
+
+        cancelControls.forEach((control) => {
+            control.addEventListener('click', () => closeModal());
+        });
+
+        modal.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+
+        confirmBtn?.addEventListener('click', () => {
+            if (pendingForm) {
+                pendingForm.submit();
+            }
+            closeModal();
+        });
+    };
+
     initializeContactMessenger();
+    initializeDeleteModal();
 });

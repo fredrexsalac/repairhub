@@ -382,6 +382,18 @@ def admin_appointments(request: HttpRequest) -> HttpResponse:
 
 
 @admin_guard
+def admin_delete_appointment(request: HttpRequest, appointment_id: str) -> HttpResponse:
+    redirect_to = request.POST.get('next') or request.GET.get('next') or reverse('admin_appointments')
+    appointment = get_object_or_404(Appointment, appointment_id=appointment_id)
+    if request.method != 'POST':
+        messages.error(request, 'Use the delete button to remove an appointment.')
+        return redirect(redirect_to)
+    appointment.delete()
+    messages.success(request, f'Appointment {appointment_id} has been deleted.')
+    return redirect(redirect_to)
+
+
+@admin_guard
 def admin_messages(request: HttpRequest) -> HttpResponse:
     search_query = request.GET.get('q', '').strip()
     status_filter = request.GET.get('status', '').strip()
