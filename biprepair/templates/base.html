@@ -10,8 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="{% static 'image/Birepair.png' %}">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    {% if request.path|slice:':6' == '/admin' or current_route|default:''|slice:':5' == 'admin' %}
-        <link rel="manifest" href="{% static 'pwa/admin-manifest.json' %}">
+    {% if request.path|slice:':6' == '/admin' or current_route|default:''|slice:':5' == 'admin' 
+        <link rel="manifest" href="{% static 'pwa/admin-manifest.json' %}">%}
         <meta name="theme-color" content="#10131f">
     {% else %}
         <link rel="manifest" href="{% static 'pwa/client-manifest.json' %}">
@@ -30,7 +30,7 @@
                     <img src="{% static 'image/Birepair.png' %}" alt="Student-Technician Repair HUB emblem" />
                 </div>
                 <div>
-                    <span class="brand-eyebrow">Independent student technicians</span>
+                    <span class="brand-eyebrow">Student-Technician Repair Hub</span>
                     <strong>
                         {% if admin_user %}
                             Welcome, {{ admin_user.full_name }}

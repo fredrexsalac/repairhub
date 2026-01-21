@@ -29,6 +29,20 @@ class StyledModelForm(StyledFieldsMixin, forms.ModelForm):
 
 
 class AppointmentForm(StyledModelForm):
+    AVAILABILITY_NOTE = (
+        'Slots open Mon/Tue/Thu/Fri from 2:00 PM to 4:00 PM. '
+        'Wednesdays and Saturdays are open the whole day. Sundays are closed.'
+    )
+    WEEKLY_AVAILABILITY = {
+        0: [(14, 16)],  # Monday
+        1: [(14, 16)],  # Tuesday
+        2: [(0, 24)],  # Wednesday (whole day)
+        3: [(14, 16)],  # Thursday
+        4: [(14, 16)],  # Friday
+        5: [(0, 24)],  # Saturday (whole day)
+        6: [],  # Sunday (closed)
+    }
+
     custom_brand_name = forms.CharField(
         max_length=50,
         required=False,
@@ -119,9 +133,27 @@ class AppointmentForm(StyledModelForm):
 
     def clean_preferred_datetime(self):
         preferred = self.cleaned_data['preferred_datetime']
-        if preferred < timezone.now():
+        current_tz = timezone.get_current_timezone()
+        if timezone.is_naive(preferred):
+            preferred_aware = timezone.make_aware(preferred, current_tz)
+        else:
+            preferred_aware = preferred
+
+        local_preferred = timezone.localtime(preferred_aware, current_tz)
+        if local_preferred < timezone.localtime(timezone.now(), current_tz):
             raise ValidationError('Preferred date and time must be in the future.')
-        return preferred
+
+        weekday = local_preferred.weekday()
+        windows = self.WEEKLY_AVAILABILITY.get(weekday, [])
+        if not windows:
+            raise ValidationError('We are closed on Sundays. Please pick another day.')
+
+        hour_value = local_preferred.hour + local_preferred.minute / 60
+        is_allowed = any(start <= hour_value < end for start, end in windows)
+        if not is_allowed:
+            raise ValidationError(self.AVAILABILITY_NOTE)
+
+        return preferred_aware
 
     def clean_service_type(self):
         service_type = self.cleaned_data['service_type']
@@ -295,9 +327,15 @@ class ClientAcademicForm(StyledModelForm):
 
 
 class ContactAdminForm(StyledModelForm):
+    attachment = forms.ImageField(
+        required=False,
+        label='Attach photo (optional)',
+        widget=forms.ClearableFileInput(attrs={'accept': 'image/*'}),
+    )
+
     class Meta:
         model = ContactMessage
-        fields = ['subject', 'body', 'preferred_contact']
+        fields = ['subject', 'body', 'preferred_contact', 'attachment']
         widgets = {
             'body': forms.Textarea(attrs={'rows': 4}),
         }

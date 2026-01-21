@@ -750,7 +750,7 @@ def contact_admin(request: HttpRequest) -> HttpResponse:
         post_data = request.POST.copy()
         post_data.setdefault('subject', default_subject)
         post_data.setdefault('preferred_contact', default_channel)
-        form = ContactAdminForm(post_data)
+        form = ContactAdminForm(post_data, request.FILES)
         _style_contact_admin_form(form)
         if form.is_valid():
             message = form.save(commit=False)

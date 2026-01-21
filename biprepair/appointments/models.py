@@ -1095,6 +1095,7 @@ class ContactMessage(models.Model):
         max_length=20, choices=PREFERRED_CHOICES, default='sms'
     )
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_OPEN)
+    attachment = models.ImageField(upload_to='contact_attachments/', blank=True, null=True)
     admin_reply = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
