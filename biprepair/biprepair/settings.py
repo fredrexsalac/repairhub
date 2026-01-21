@@ -31,7 +31,7 @@ load_dotenv(BASE_DIR / '.env')
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'ea36b21792d4bae2f2cbf9ae165f87f7')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DJANGO_DEBUG', 'False').lower() == 'true'
+DEBUG = os.getenv('DJANGO_DEBUG', 'True').lower() == 'true'
 
 _allowed = os.getenv(
     'DJANGO_ALLOWED_HOSTS', 'repairhub-g0je.onrender.com,localhost,127.0.0.1'

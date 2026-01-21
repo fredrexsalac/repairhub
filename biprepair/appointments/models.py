@@ -10,6 +10,7 @@ class AdminUser(models.Model):
     full_name = models.CharField(max_length=150)
     password = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
+    last_active = models.DateTimeField(default=timezone.now)
 
     class Meta:
         db_table = 'admins'
