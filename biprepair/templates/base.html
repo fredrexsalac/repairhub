@@ -1,4 +1,5 @@
 {% load static %}
+{% with request.resolver_match.url_name as current_route %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,15 +11,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="{% static 'image/Birepair.png' %}">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    {% if request.path|slice:':6' == '/admin' or current_route|default:''|slice:':5' == 'admin' 
-        <link rel="manifest" href="{% static 'pwa/admin-manifest.json' %}">%}
+    {% if request.path|slice:':6' == '/admin' or current_route|default:''|slice:':5' == 'admin' %}
+        <link rel="manifest" href="{% static 'pwa/admin-manifest.json' %}">
         <meta name="theme-color" content="#10131f">
     {% else %}
         <link rel="manifest" href="{% static 'pwa/client-manifest.json' %}">
         <meta name="theme-color" content="#1a1f2c">
     {% endif %}
 </head>
-{% with request.resolver_match.url_name as current_route %}
 <body class="page-shell"
       data-client-authenticated="{% if is_client_authenticated %}true{% else %}false{% endif %}"
       data-client-gate-disabled="{% if current_route == 'client_login' or current_route == 'client_register' or current_route == 'admin_login' or current_route == 'admin_register' or current_route == 'admin_dashboard' or current_route == 'admin_detail' or current_route == 'admin_root' %}true{% else %}false{% endif %}">
