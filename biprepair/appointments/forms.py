@@ -327,15 +327,9 @@ class ClientAcademicForm(StyledModelForm):
 
 
 class ContactAdminForm(StyledModelForm):
-    attachment = forms.ImageField(
-        required=False,
-        label='Attach photo (optional)',
-        widget=forms.ClearableFileInput(attrs={'accept': 'image/*'}),
-    )
-
     class Meta:
         model = ContactMessage
-        fields = ['subject', 'body', 'preferred_contact', 'attachment']
+        fields = ['subject', 'body', 'preferred_contact']
         widgets = {
             'body': forms.Textarea(attrs={'rows': 4}),
         }

@@ -121,7 +121,7 @@ A`                    <span>{{ primary_admin.status_label|default:'Active now' }
             {% endif %}
         </div>
 
-        <form method="post" class="composer" data-contact-composer enctype="multipart/form-data">
+        <form method="post" class="composer" data-contact-composer>
             {% csrf_token %}
             {{ form.subject.as_hidden }}
             {{ form.preferred_contact.as_hidden }}
@@ -139,15 +139,6 @@ A`                    <span>{{ primary_admin.status_label|default:'Active now' }
                     </div>
                 {% endif %}
                 <div class="composer-actions">
-                    <div class="attachment-control">
-                        {{ form.attachment }}
-                        <label for="{{ form.attachment.id_for_label }}" class="attachment-button" title="Attach photo" aria-label="Attach photo">
-                            📷
-                        </label>
-                        {% if form.attachment.errors %}
-                            <div class="form-errors">{{ form.attachment.errors }}</div>
-                        {% endif %}
-                    </div>
                     <button class="btn primary send-btn" type="submit" aria-label="Send message">
                         <span aria-hidden="true">➤</span>
                     </button>
