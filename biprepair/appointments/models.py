@@ -140,14 +140,14 @@ class Appointment(models.Model):
 
     SERVICE_PRICING = {
         DEVICE_ANDROID: {
-            'lcd': 600,
-            'amoled': 1300,
-            'back_cover': 300,
-            'camera': 1000,
-            'speaker': 700,
-            'buttons': 500,
+            'lcd': 350,
+            'amoled': 700,
+            'back_cover': 150,
+            'camera': 450,
+            'speaker': 500,
+            'buttons': 200,
             'sub_board': 200,
-            'frame': 900,
+            'frame': 500,
         },
         DEVICE_IPHONE: {
             'lcd': 800,
@@ -160,13 +160,13 @@ class Appointment(models.Model):
             'frame': 1000,
         },
         DEVICE_LAPTOP: {
-            'laptop_lcd': 2100,
-            'keyboard': 2000,
-            'ram': 1150,
-            'storage': 1500,
-            'fan': 1100,
-            'thermal': 500,
-            'frame': 2000,
+            'laptop_lcd': 1500,
+            'keyboard': 750,
+            'ram': 500,
+            'storage': 500,
+            'fan': 300,
+            'thermal': 100,
+            'frame': 1000,
             'io_board': 2600,
         },
     }
